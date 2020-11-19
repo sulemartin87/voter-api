@@ -5,10 +5,10 @@ const cors = require("cors");
 const app = express();
 
 var corsOptions = {
-  origin: "http://0.0.0.0:8081"
+  // origin: "http://0.0.0.0:8081"
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
