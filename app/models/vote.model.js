@@ -1,9 +1,10 @@
 module.exports = mongoose => {
   var schema = mongoose.Schema(
     {
-      title: String,
-      description: String,
-      published: Boolean
+      category: String,
+      artist: String,
+      user: String,
+      // published: Boolean
     },
     { timestamps: true }
   );
@@ -14,6 +15,6 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Tutorial = mongoose.model("tutorial", schema);
-  return Tutorial;
+  const Vote = mongoose.model("vote", schema);
+  return Vote;
 };
