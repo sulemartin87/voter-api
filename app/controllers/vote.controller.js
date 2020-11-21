@@ -2,7 +2,7 @@ const db = require("../models");
 const Vote = db.votes;
 
 // Create and Save a new Tutorial
-exports.create = (req, res) => {
+exports.create =async (req, res) => {
   // Validate request
   if (!req.body.category) {
     res.status(400).send({ message: "Content can not be empty!" });
@@ -16,8 +16,17 @@ exports.create = (req, res) => {
     user: req.body.user,
     // published: req.body.published ? req.body.published : false
   });
-
+  let f = false;
+  var condition = tutorial.category && tutorial.user ?  {"createdAt":{$gt:new Date(Date.now() - 24*60*60 * 1000)}, "category": tutorial.category, "user": tutorial.user}  : {};
+  const object = await retrieVoted (condition);
+  f = object.length > 0 ? true : false;
   // Save Tutorial in the database
+  if(f) {
+    res.status(400).send({
+        message:
+           "User has already voted."
+      });
+  }else {
   tutorial
     .save(tutorial)
     .then(data => {
@@ -29,6 +38,8 @@ exports.create = (req, res) => {
           err.message || "Some error occurred while creating the Tutorial."
       });
     });
+  }
+  
 };
 
 // Retrieve all Tutorials from the database.
@@ -48,6 +59,10 @@ exports.findAll = (req, res) => {
     });
 };
 
+
+function retrieVoted(condition) {
+  return Vote.find(condition).exec();
+};
 // Find a single Tutorial with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
