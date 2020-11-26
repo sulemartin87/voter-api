@@ -79,7 +79,25 @@ exports.findOne = (req, res) => {
         .send({ message: "Error retrieving Tutorial with id=" + id });
     });
 };
+exports.findByCategory = (req, res) => {
+  const category = req.params.category;
+  if (!req.params.category) {
+    res.status(400).send({ message: "Category can not be empty!" });
+    return;
+  }
+  var condition =  { category: category } ;
 
+  Vote.find(condition)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving tutorials."
+      });
+    });
+};
 // Update a Tutorial by the id in the request
 exports.update = (req, res) => {
   if (!req.body) {
@@ -109,39 +127,39 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  Vote.findByIdAndRemove(id, { useFindAndModify: false })
-    .then(data => {
-      if (!data) {
-        res.status(404).send({
-          message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`
-        });
-      } else {
-        res.send({
-          message: "Tutorial was deleted successfully!"
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Could not delete Tutorial with id=" + id
-      });
-    });
+  // Vote.findByIdAndRemove(id, { useFindAndModify: false })
+  //   .then(data => {
+  //     if (!data) {
+  //       res.status(404).send({
+  //         message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`
+  //       });
+  //     } else {
+  //       res.send({
+  //         message: "Tutorial was deleted successfully!"
+  //       });
+  //     }
+  //   })
+  //   .catch(err => {
+  //     res.status(500).send({
+  //       message: "Could not delete Tutorial with id=" + id
+  //     });
+  //   });
 };
 
 // Delete all Tutorials from the database.
 exports.deleteAll = (req, res) => {
-  Vote.deleteMany({})
-    .then(data => {
-      res.send({
-        message: `${data.deletedCount} Tutorials were deleted successfully!`
-      });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all tutorials."
-      });
-    });
+  // Vote.deleteMany({})
+  //   .then(data => {
+  //     res.send({
+  //       message: `${data.deletedCount} Tutorials were deleted successfully!`
+  //     });
+  //   })
+  //   .catch(err => {
+  //     res.status(500).send({
+  //       message:
+  //         err.message || "Some error occurred while removing all tutorials."
+  //     });
+  //   });
 };
 
 // Find all published Tutorials
